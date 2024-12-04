@@ -267,8 +267,6 @@ export default function Wrapped() {
     purchases: false
   });
 
-  const slides = createSlides(salesData);
-
   useEffect(() => {
     const checkCache = () => {
       const cached = localStorage.getItem('vintedWrappedData');
@@ -420,6 +418,7 @@ export default function Wrapped() {
     const container = containerRef.current;
     if (!container) return;
 
+    const currentSlides = createSlides(salesData);
     let scrollTimeout: NodeJS.Timeout;
     
     const handleScroll = () => {
@@ -430,7 +429,7 @@ export default function Wrapped() {
         const scrollPosition = container.scrollTop;
         const currentIndex = Math.round(scrollPosition / slideHeight);
         
-        if (currentIndex !== currentSlide && currentIndex >= 0 && currentIndex < slides.length) {
+        if (currentIndex !== currentSlide && currentIndex >= 0 && currentIndex < currentSlides.length) {
           setCurrentSlide(currentIndex);
         }
       }, 50);
@@ -442,7 +441,9 @@ export default function Wrapped() {
       container.removeEventListener('scroll', handleScroll);
       clearTimeout(scrollTimeout);
     };
-  }, [currentSlide, slides.length, showTokenModal, loading, error]);
+  }, [currentSlide, showTokenModal, loading, error, salesData]);
+
+  const slides = createSlides(salesData);
 
   return (
     <main className="fixed inset-0 overflow-hidden">
