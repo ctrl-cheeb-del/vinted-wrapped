@@ -2,7 +2,7 @@
 
 # Vinted Wrapped 2024 
 
-TRY YOURSELF AT [VINTED WRAPPED](https://vinted-wrapped-frontend.vercel.app/)
+TRY YOURSELF AT [VINTED WRAPPED](https://vintedwrapped.com/)
 
 </div>
 
