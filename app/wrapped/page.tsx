@@ -66,7 +66,8 @@ const createSlides = (salesData: SalesData | null) => [
       : `${CURRENCY_SYMBOLS['EUR']}0.00`,
     description: "Amazing work! 🎉",
     color: "text-green-400",
-    bgColor: "bg-gradient-to-b from-green-600 to-green-900"
+    bgColor: "bg-gradient-to-b from-green-600 to-green-900",
+    fitNumber: true
   },
   {
     id: 2,
@@ -95,7 +96,8 @@ const createSlides = (salesData: SalesData | null) => [
       : `${CURRENCY_SYMBOLS['EUR']}0.00`,
     description: "was your highest sale!",
     color: "text-yellow-400",
-    bgColor: "bg-gradient-to-b from-yellow-600 to-yellow-900"
+    bgColor: "bg-gradient-to-b from-yellow-600 to-yellow-900",
+    fitNumber: true
   },
   {
     id: 5,
@@ -494,6 +496,7 @@ export default function Wrapped() {
                   color={slide.color}
                   inView={currentSlide === index}
                   isLastSlide={slide.isLastSlide}
+                  fitNumber={slide.fitNumber}
                 />
               </section>
             ))}

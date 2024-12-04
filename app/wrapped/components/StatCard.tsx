@@ -14,6 +14,7 @@ interface StatCardProps {
   color: string;
   inView: boolean;
   isLastSlide?: boolean;
+  fitNumber?: boolean;
 }
 
 const formatValue = (value: string | number) => {
@@ -23,7 +24,7 @@ const formatValue = (value: string | number) => {
   return value;
 };
 
-export function StatCard({ index, title, Icon, value, description, color, inView, isLastSlide }: StatCardProps) {
+export function StatCard({ index, title, Icon, value, description, color, inView, isLastSlide, fitNumber }: StatCardProps) {
   return (
     <motion.div
       className="w-full h-full flex items-center justify-center p-6 relative"
