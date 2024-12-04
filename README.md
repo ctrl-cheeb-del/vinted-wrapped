@@ -1,6 +1,6 @@
 <div align="center">
 
-# Vinted Wrapped 2024 - Frontend
+# Vinted Wrapped 2024 
 
 TRY YOURSELF AT [VINTED WRAPPED](https://vinted-wrapped-frontend.vercel.app/)
 
