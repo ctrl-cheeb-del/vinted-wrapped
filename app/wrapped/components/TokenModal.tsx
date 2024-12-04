@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 interface TokenModalProps {
-  onSubmit: (tokens: { accessToken: string; xcsrfToken: string; domain: string }) => void;
-  isLoading?: boolean;
+  onSubmit: (tokens: { accessToken: string; xcsrfToken: string; domain: string }) => Promise<void>;
+  isLoading: boolean;
+  errorMessage?: string | null;
 }
 
-export function TokenModal({ onSubmit, isLoading = false }: TokenModalProps) {
+export function TokenModal({ onSubmit, isLoading = false, errorMessage = null }: TokenModalProps) {
   const [accessToken, setAccessToken] = useState('');
   const [xcsrfToken, setXcsrfToken] = useState('');
   const [domain, setDomain] = useState('fr');

@@ -257,7 +257,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 export default function Wrapped() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showTokenModal, setShowTokenModal] = useState(true);
+  const [showTokenModal, setShowTokenModal] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [salesData, setSalesData] = useState<SalesData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -284,12 +284,20 @@ export default function Wrapped() {
         } else {
           console.log('Cache expired, needs refresh');
           localStorage.removeItem('vintedWrappedData');
+          setShowTokenModal(true);
         }
+      } else {
+        console.log('No cache found');
+        setShowTokenModal(true);
       }
     };
 
     checkCache();
   }, []);
+
+  if (showTokenModal === null) {
+    return <div className="fixed inset-0 bg-black" />;
+  }
 
   const calculateMostActiveMonth = (items: any[]) => {
     const monthCounts: Record<string, number> = {};
@@ -438,82 +446,94 @@ export default function Wrapped() {
 
   return (
     <main className="fixed inset-0 overflow-hidden">
-      <div className="absolute inset-0">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentSlide}
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-          >
-            <Background color={slides[currentSlide].bgColor} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {showTokenModal && (
+        <TokenModal
+          onSubmit={fetchSalesData}
+          isLoading={loading}
+          errorMessage={error}
+        />
+      )}
       
-      <div 
-        ref={containerRef}
-        className="h-screen w-full overflow-y-scroll snap-mandatory snap-y scrollbar-hide relative z-10"
-        style={{ 
-          scrollSnapType: 'y mandatory',
-          WebkitOverflowScrolling: 'touch',
-          scrollBehavior: 'smooth',
-          height: '100dvh'
-        }}
-      >
-        {slides.map((slide, index) => (
-          <section
-            key={slide.id}
-            data-index={index}
-            className="h-screen flex items-center justify-center"
-            style={{
-              scrollSnapAlign: 'start',
-              scrollSnapStop: 'always',
+      {!showTokenModal && (
+        <>
+          <div className="absolute inset-0">
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={currentSlide}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <Background color={slides[currentSlide].bgColor} />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          <div 
+            ref={containerRef}
+            className="h-screen w-full overflow-y-scroll snap-mandatory snap-y scrollbar-hide relative z-10"
+            style={{ 
+              scrollSnapType: 'y mandatory',
+              WebkitOverflowScrolling: 'touch',
+              scrollBehavior: 'smooth',
               height: '100dvh'
             }}
           >
-            <StatCard
-              index={index}
-              title={slide.title}
-              Icon={slide.Icon}
-              value={slide.value}
-              description={slide.description}
-              color={slide.color}
-              inView={currentSlide === index}
-              isLastSlide={slide.isLastSlide}
-            />
-          </section>
-        ))}
-      </div>
+            {slides.map((slide, index) => (
+              <section
+                key={slide.id}
+                data-index={index}
+                className="h-screen flex items-center justify-center"
+                style={{
+                  scrollSnapAlign: 'start',
+                  scrollSnapStop: 'always',
+                  height: '100dvh'
+                }}
+              >
+                <StatCard
+                  index={index}
+                  title={slide.title}
+                  Icon={slide.Icon}
+                  value={slide.value}
+                  description={slide.description}
+                  color={slide.color}
+                  inView={currentSlide === index}
+                  isLastSlide={slide.isLastSlide}
+                />
+              </section>
+            ))}
+          </div>
 
-      <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center">
-        <div className="text-white/60 text-sm flex items-center gap-2 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
-          Sponsored by
-          <Link href="https://resoled.it" target="_blank" className="hover:opacity-80 transition-opacity inline-flex items-center gap-2">
-            <Image
-              src="/resoled.png"
-              alt="Resoled"
-              width={16}
-              height={16}
-              className="inline-block object-contain"
-            />
-            <span>Resoled</span>
-          </Link>
-          and
-          <Link href="https://vinta.app" target="_blank" className="hover:opacity-80 transition-opacity inline-flex items-center gap-2">
-            <Image
-              src="/vinta.png"
-              alt="Vinta"
-              width={16}
-              height={16}
-              className="inline-block object-contain"
-            />
-            <span>Vinta</span>
-          </Link>
-        </div>
-      </div>
+          <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center">
+            <div className="text-white/60 text-sm flex items-center gap-2 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
+              Sponsored by
+              <Link href="https://resoled.it" target="_blank" className="hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                <Image
+                  src="/resoled.png"
+                  alt="Resoled"
+                  width={16}
+                  height={16}
+                  className="inline-block object-contain"
+                />
+                <span>Resoled</span>
+              </Link>
+              and
+              <Link href="https://vinta.app" target="_blank" className="hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                <Image
+                  src="/vinta.png"
+                  alt="Vinta"
+                  width={16}
+                  height={16}
+                  className="inline-block object-contain"
+                />
+                <span>Vinta</span>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }
